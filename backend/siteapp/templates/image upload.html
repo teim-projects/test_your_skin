@@ -1,0 +1,455 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Upload Image{% endblock %}
+{% block extra_head %}
+  <style>
+    body {
+      background: #FFFFFF;
+      font-family: Arial, sans-serif;
+    }
+    .main-card {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 30px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    .preview {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .preview img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 8px;
+    }
+    .result-box {
+      margin-top: 20px;
+      padding: 15px;
+      background: #F8F8F8;
+      border-left: 5px solid #89735D;
+      display: none;
+      text-align: left;
+      border-radius: 6px;
+    }
+    .symptoms-box {
+      margin-top: 25px;
+      text-align: left;
+    }
+    .symptoms-box h4 {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    footer {
+      margin-top: 50px;
+      padding: 18px 0;
+      background: #4E4845;
+      color: #FFFFFF;
+      text-align: center;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+    }
+    .pageTitle {
+      margin-top: 25px;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #4E4845;
+      letter-spacing: 0.8px;
+      text-align: center;
+    }
+    .prediction-item {
+      transition: all 0.3s ease;
+    }
+    .prediction-item:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .badge-danger {
+      background-color: #5A483A;
+      font-size: 0.75rem;
+    }
+    .text-danger { color: #5A483A !important; }
+    .font-weight-bold {
+      font-weight: 700 !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+
+  <!-- Page Title -->
+  <section id="inner-headline">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <p class="text-muted text-center">Upload a skin image and select your symptoms before analyzing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Upload Form -->
+  <section id="content">
+    <div class="container">
+      <div class="main-card">
+        <form id="symptomsForm">
+          {% csrf_token %}
+          <!-- Upload -->
+          <div class="mb-3">
+            <label for="imageInput" class="form-label">Upload Skin Image:</label>
+            <input type="file" id="imageInput" accept="image/*" class="form-control mb-2">
+          </div>
+
+          <!-- Preview -->
+          <div class="preview" id="preview"></div>
+
+          <!-- Symptoms -->
+          <div class="symptoms-box">
+            <h4>Select Your Symptoms</h4>
+            <div class="form-check"><input class="form-check-input" type="checkbox" value="Itching" id="symptom1"><label class="form-check-label" for="symptom1">Itching</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" value="Bleeding" id="symptom2"><label class="form-check-label" for="symptom2">Bleeding</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" value="Pain" id="symptom3"><label class="form-check-label" for="symptom3">Pain</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" value="Changing Color" id="symptom4"><label class="form-check-label" for="symptom4">Changing Color</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" value="Changing Size" id="symptom5"><label class="form-check-label" for="symptom5">Changing Size</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" value="New Lesion/Spot" id="symptom6"><label class="form-check-label" for="symptom6">New Lesion/Spot</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox" value="None of the above" id="symptomNone"><label class="form-check-label" for="symptomNone">None of the above</label></div>
+          </div>
+
+          <!-- Analyze Button -->
+          <button id="analyzeBtn" type="button" class="btn btn-primary mt-3" disabled aria-busy="false">Analyze Image</button>
+
+          <noscript>
+            <form action="/predict/" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="file" name="image" accept="image/*" required>
+              <button type="submit" class="btn btn-secondary mt-2">Analyze (No JS)</button>
+            </form>
+          </noscript>
+        </form>
+
+        <!-- Result -->
+  <div class="result-box" id="resultBox" aria-live="polite">
+          <h5>Analysis Result:</h5>
+          <div id="predictionsList"></div>
+          <p><strong>Symptoms Selected:</strong> <span id="selectedSymptoms"></span></p>
+          <div id="qualityWarn" style="color:var(--color-primary); display:none; margin-top:8px;">Image quality seems low; results may be less accurate.</div>
+          <!-- PDF Download Button -->
+          <a id="downloadReport" href="#" class="btn btn-success" style="display:none;">Download PDF Report</a>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+{% block extra_js %}
+<script>
+  const imageInput = document.getElementById("imageInput");
+  const preview = document.getElementById("preview");
+  const analyzeBtn = document.getElementById("analyzeBtn");
+  const resultBox = document.getElementById("resultBox");
+  const predictionsList = document.getElementById("predictionsList");
+  const selectedSymptoms = document.getElementById("selectedSymptoms");
+  const downloadReport = document.getElementById("downloadReport");
+  const qualityWarn = document.getElementById("qualityWarn");
+  const symptomCheckboxes = Array.from(document.querySelectorAll('#symptomsForm input[type="checkbox"]'));
+  const noneCheckbox = document.getElementById("symptomNone");
+
+  let uploadedImage = null;
+  let compressedBlob = null;
+
+  // Get CSRF token from cookie or hidden input (Django's standard approach)
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  function getCSRFToken() {
+    // Try cookie first
+    let token = getCookie('csrftoken');
+    if (!token) {
+      // Fallback to hidden input
+      const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+      if (csrfInput) {
+        token = csrfInput.value;
+      }
+    }
+    return token;
+  }
+
+  function setChildren(el, children) {
+    while (el.firstChild) el.removeChild(el.firstChild);
+    children.forEach(c => el.appendChild(c));
+  }
+
+  function updateNoneSelection(){
+    if(!noneCheckbox){ return; }
+    if(noneCheckbox.checked){
+      symptomCheckboxes.forEach(cb => {
+        if(cb !== noneCheckbox){
+          cb.checked = false;
+          cb.disabled = true;
+        }
+      });
+    } else {
+      symptomCheckboxes.forEach(cb => {
+        if(cb !== noneCheckbox){
+          cb.disabled = false;
+        }
+      });
+    }
+  }
+
+  if(noneCheckbox){
+    noneCheckbox.addEventListener('change', updateNoneSelection);
+    symptomCheckboxes.forEach(cb => {
+      if(cb === noneCheckbox){ return; }
+      cb.addEventListener('change', function(){
+        if(this.checked){
+          noneCheckbox.checked = false;
+          updateNoneSelection();
+        }
+      });
+    });
+    updateNoneSelection();
+  }
+
+  function formatPercent(x) {
+    if (typeof x !== 'number') return '';
+    return (x * 100).toFixed(1) + '%';
+  }
+
+  function showInlineMessage(container, text, level = 'info') {
+    const div = document.createElement('div');
+    div.className = `alert alert-${level}`;
+    div.setAttribute('role', 'alert');
+    div.textContent = text;
+    setChildren(container, [div]);
+  }
+
+  async function downscaleImage(file, maxDim = 1600, quality = 0.85) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          const ratio = Math.min(maxDim / width, maxDim / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(blob => {
+          if (blob) resolve(blob); else reject(new Error('Compression failed'));
+        }, 'image/jpeg', quality);
+      };
+      img.onerror = () => reject(new Error('Invalid image data'));
+      const reader = new FileReader();
+      reader.onload = e => img.src = e.target.result;
+      reader.onerror = () => reject(new Error('File read error'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Preview uploaded image and enable Analyze
+  imageInput.addEventListener("change", function(){
+    const file = this.files[0];
+    if(file){
+      // Validate client-side type & size
+      if (!file.type.startsWith('image/')) {
+        showInlineMessage(preview, 'Please select a valid image file.', 'warning');
+        analyzeBtn.disabled = true;
+        uploadedImage = null;
+        return;
+      }
+      if (file.size > 1 * 1024 * 1024) {
+        showInlineMessage(preview, 'File too large. Maximum allowed size is 1 MB.', 'warning');
+        analyzeBtn.disabled = true;
+        uploadedImage = null;
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e){
+        const imgEl = document.createElement('img');
+        imgEl.src = e.target.result;
+        imgEl.alt = 'Uploaded skin image preview';
+        setChildren(preview, [imgEl]);
+        uploadedImage = file;
+        analyzeBtn.disabled = false;
+        // Reset result box until analyze is run
+        setChildren(predictionsList, []);
+        selectedSymptoms.textContent = "";
+        resultBox.style.display = "none";
+        downloadReport.style.display = "none";
+        qualityWarn.style.display = "none";
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Call backend model for prediction
+  analyzeBtn.addEventListener("click", async function(){
+    if(!uploadedImage) {
+      showInlineMessage(predictionsList, 'Please upload an image first.', 'warning');
+      return;
+    }
+
+    const checked = Array.from(document.querySelectorAll('#symptomsForm input[type="checkbox"]:checked'));
+    if(checked.length === 0){
+      showInlineMessage(predictionsList, 'Please select at least one symptom.', 'warning');
+      return;
+    }
+
+    const symptomsSelectedArr = checked.map(cb => cb.value);
+    const hasRealSymptomsSelected = symptomsSelectedArr.some(val => val !== 'None of the above');
+
+    // UI loading state
+    const originalBtnText = analyzeBtn.textContent;
+    analyzeBtn.textContent = "Analyzing...";
+    analyzeBtn.disabled = true;
+    analyzeBtn.setAttribute('aria-busy', 'true');
+
+    try {
+      // Compress if large (>1MB)
+      compressedBlob = uploadedImage.size > (1 * 1024 * 1024) ? await downscaleImage(uploadedImage) : uploadedImage;
+
+      // Ensure final payload <= 1MB
+      if (compressedBlob.size > (1 * 1024 * 1024)) {
+        throw new Error('Compressed image still exceeds 1 MB. Please upload a smaller image or crop/scale it.');
+      }
+
+      const formData = new FormData();
+      formData.append('image', compressedBlob, 'upload.jpg');
+      formData.append('symptoms', JSON.stringify(symptomsSelectedArr));
+
+      // Get CSRF token from cookie or hidden input
+      const csrfToken = getCSRFToken();
+      if (!csrfToken) {
+        throw new Error('CSRF token not found. Please refresh the page and try again.');
+      }
+
+      const response = await fetch('/predict/', {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken
+        },
+        body: formData,
+        credentials: 'same-origin'
+      });
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        throw new Error(`Server returned invalid response (status ${response.status}). Please check if the server is running correctly.`);
+      }
+
+      // Check if server returned an error
+      if (!data.ok || data.error) {
+        const errorMsg = data.error || 'Unknown error occurred';
+        throw new Error(errorMsg);
+      }
+
+      const preds = Array.isArray(data.predictions) ? data.predictions : [];
+      const qualityOk = !!data.quality_ok;
+
+      // render predictions list with detailed information
+      if (preds.length) {
+        const nodes = [];
+        preds.forEach((p, index) => {
+          const container = document.createElement('div');
+          container.className = 'prediction-item mb-3 p-3 border rounded';
+          if ((p.disease || '').includes('Carcinoma') || (p.disease || '').includes('Melanoma')) {
+            container.className += ' border-danger bg-light';
+          }
+          const header = document.createElement('div');
+          header.className = 'd-flex justify-content-between align-items-start';
+          const left = document.createElement('div');
+          const h6 = document.createElement('h6');
+          if ((p.disease || '').includes('Carcinoma') || (p.disease || '').includes('Melanoma')) {
+            h6.className = 'text-danger font-weight-bold';
+          }
+          h6.textContent = `${index + 1}. ${p.disease || ''}`;
+          left.appendChild(h6);
+          // Don't show confidence for "Other / Unknown"
+          if (p.disease !== 'Other / Unknown') {
+            const small = document.createElement('small');
+            small.className = 'text-muted d-block';
+            small.textContent = `Confidence: ${formatPercent(p.confidence)}`;
+            left.appendChild(small);
+            if (typeof p.original_confidence === 'number' && Math.abs((p.confidence || 0) - p.original_confidence) > 0.001) {
+              const delta = (p.confidence || 0) - p.original_confidence;
+              const adj = document.createElement('small');
+              adj.className = delta >= 0 ? 'text-success d-block' : 'text-warning d-block';
+              const changeLabel = delta >= 0 ? 'boosted' : 'reduced';
+              adj.textContent = `Symptom ${changeLabel}: ${formatPercent(Math.abs(delta))} (base ${formatPercent(p.original_confidence)})`;
+              left.appendChild(adj);
+            }
+          }
+          header.appendChild(left);
+          const diseaseInfo = data.info && data.info[p.disease] ? data.info[p.disease] : null;
+          const body = document.createElement('div');
+          body.className = 'mt-2';
+          if (hasRealSymptomsSelected && Array.isArray(p.symptom_matches)) {
+            const matchLine = document.createElement('p');
+            matchLine.className = p.symptom_matches.length ? 'mb-1 text-success small' : 'mb-1 text-muted small';
+            matchLine.textContent = p.symptom_matches.length
+              ? `Symptoms matched: ${p.symptom_matches.join(', ')}`
+              : 'No symptom overlap detected for this disease.';
+            body.appendChild(matchLine);
+          }
+          if (diseaseInfo) {
+            const p1 = document.createElement('p');
+            p1.className = 'mb-1';
+            const b1 = document.createElement('strong'); b1.textContent = 'Description:'; p1.appendChild(b1); p1.appendChild(document.createTextNode(' ' + (diseaseInfo.desc || '')));
+            const p2 = document.createElement('p');
+            p2.className = 'mb-0';
+            const b2 = document.createElement('strong'); b2.textContent = 'Advice:'; p2.appendChild(b2); p2.appendChild(document.createTextNode(' ' + (diseaseInfo.advice || '')));
+            body.appendChild(p1);
+            body.appendChild(p2);
+          }
+          container.appendChild(header);
+          container.appendChild(body);
+          nodes.push(container);
+        });
+        setChildren(predictionsList, nodes);
+      } else {
+        showInlineMessage(predictionsList, 'No predictions available. Please try with a different image.', 'warning');
+      }
+      selectedSymptoms.textContent = symptomsSelectedArr.join(", ");
+      qualityWarn.style.display = qualityOk ? "none" : "block";
+      resultBox.style.display = "block";
+
+      // Compose params for report (first prediction as primary; include confidence)
+      const primary = preds[0] || { disease: 'Unknown', confidence: '' };
+      downloadReport.style.display = "inline-block";
+      const analysisId = data.analysis_id ? String(data.analysis_id) : '';
+      downloadReport.href = analysisId ? (`{% url 'download' %}?id=` + encodeURIComponent(analysisId)) : '#';
+
+    } catch (err) {
+      console.error('Prediction error:', err);
+      const errorMessage = err.message || 'Sorry, something went wrong while analyzing the image. Please try again.';
+      showInlineMessage(predictionsList, errorMessage, 'danger');
+      selectedSymptoms.textContent = symptomsSelectedArr.join(", ");
+      resultBox.style.display = "block";
+      downloadReport.style.display = "none";
+    } finally {
+      analyzeBtn.textContent = originalBtnText;
+      analyzeBtn.disabled = false;
+      analyzeBtn.setAttribute('aria-busy', 'false');
+    }
+  });
+</script>
+{% endblock %}

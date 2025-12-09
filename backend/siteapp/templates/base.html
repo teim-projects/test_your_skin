@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% load static %}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{% block title %}SkinCare{% endblock %}</title>
+<!-- FontAwesome for icons across all pages -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+<link href="{% static 'css/fancybox/jquery.fancybox.css' %}" rel="stylesheet" />
+<link href="{% static 'css/flexslider.css' %}" rel="stylesheet" />
+<link href="{% static 'css/style.css' %}" rel="stylesheet" />
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+<div id="wrapper" class="home-page">
+  <header>
+    <div class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'img/TEIM LOGO.png' %}" alt="TEIM Logo"/></a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'about' %}">About Us</a></li>
+            <li><a href="{% url 'image_upload' %}">Upload Image</a></li>
+            <li><a href="{% url 'treatment' %}">Disease</a></li>
+            <li><a href="{% url 'doctors' %}">Doctors</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+            {% if user.is_authenticated %}
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <img src="{% if user.profile and user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'img/avatar.png' %}{% endif %}" alt="avatar" style="width:28px;height:28px;border-radius:50%;object-fit:cover;margin-right:5px;"> <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'user' %}">View Profile</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+              </ul>
+            </li>
+            {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}">Register</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <footer>
+    <div class="container">
+      <div class="footer-contact-block">
+        <h5 class="widgetheading">Contact Us</h5>
+        <div class="footer-contact-item">
+          <i class="fa fa-map-marker"></i>
+          <span><strong>Address:</strong> 27/2, Laxmi-Villa Bunglow, Hingne Khurd, Pune-Sinhagad Road, Pune, Maharashtra. Pincode - 411051</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa fa-phone"></i>
+          <span><strong>Phone:</strong> +91 9850047358</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa fa-envelope"></i>
+          <span><strong>Email:</strong> <a href="mailto:connect@teim.in">connect@teim.in</a></span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fa fa-globe"></i>
+          <span><strong>Website:</strong> <a href="http://www.teim.co.in" target="_blank" rel="noopener noreferrer">www.teim.co.in</a></span>
+        </div>
+        <p class="footer-disclaimer">
+          <strong>Disclaimer:</strong> This is a preliminary diagnostic tool. Do not rely solely on this result. Please seek professional advice from the nearest dermatologist.
+        </p>
+      </div>
+    </div>
+  </footer>
+  <div id="sub-footer">
+    <div class="container footer-meta">
+      <div class="copyright"><p><span>&copy; All rights reserved.</span></p></div>
+      <ul class="social-network">
+        <li><a href="#" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<a href="#" class="scrollup"><i class="fa fa-angle-up active"></i></a>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.fancybox.pack.js' %}"></script>
+<script src="{% static 'js/jquery.fancybox-media.js' %}"></script>
+<script src="{% static 'js/portfolio/jquery.quicksand.js' %}"></script>
+<script src="{% static 'js/portfolio/setting.js' %}"></script>
+<script src="{% static 'js/jquery.flexslider.js' %}"></script>
+<script src="{% static 'js/animate.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
+
+

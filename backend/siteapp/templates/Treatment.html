@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Treatments{% endblock %}
+{% block extra_head %}
+<style>
+.disease-info {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    background: #f9f9f9;
+}
+.disease-info h3 {
+    color: #2c3e50;
+}
+.disease-info h4 {
+    color: #16a085;
+}
+.disease-info p {
+    font-size: 15px;
+}
+</style>
+{% endblock %}
+{% block content %}
+
+    <section id="inner-headline">
+        <div class="container">
+            <h2 class="pageTitle">Treatment & Diseases</h2>
+        </div>
+    </section>
+
+    <section id="content">
+    <div class="container content">     
+
+        <!-- Disease Info Blocks -->
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/Acne.jpg' %}" alt="Acne" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Acne Vulgaris</h3>
+                    <p><em>Type:</em> Inflammatory/Non-inflammatory follicular disorder</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Blackheads and whiteheads across the T-zone</li>
+                        <li>Small, inflamed papules/pustules with tenderness</li>
+                        <li>Noticeable shine or oil production</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Cysts, nodules, and long-term scarring</li>
+                        <li>Post-inflammatory hyperpigmentation</li>
+                        <li>Emotional distress or reduced self-esteem</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Gentle cleansing, avoid picking/squeezing</li>
+                        <li>Use non-comedogenic products, manage triggers</li>
+                        <li>Seek medical care for persistent or severe acne</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/Eczema.jpg' %}" alt="Eczema" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Eczema (Atopic Dermatitis)</h3>
+                    <p><em>Type:</em> Chronic inflammatory dermatosis</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Dry, itchy, erythematous patches</li>
+                        <li>Oozing or crusting during flare-ups</li>
+                        <li>Symptoms worsen with allergens, fabrics, or stress</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Skin thickening and persistent inflammation</li>
+                        <li>Secondary bacterial infections from scratching</li>
+                        <li>Sleep disturbance and quality-of-life impact</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Daily moisturization and gentle cleansers</li>
+                        <li>Avoid known allergens/irritants</li>
+                        <li>Dermatologist-guided anti-inflammatory care</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/psoriasis.webp' %}" alt="Psoriasis" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Psoriasis</h3>
+                    <p><em>Type:</em> Autoimmune-mediated chronic dermatosis</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Red plaques covered with silvery scales</li>
+                        <li>Itching or stinging on elbows, knees, or scalp</li>
+                        <li>Dry, cracked skin that may bleed</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Plaques thicken and spread to new areas</li>
+                        <li>Joint pain suggestive of psoriatic arthritis</li>
+                        <li>Emotional stress and reduced productivity</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Trigger management (stress, skin injury)</li>
+                        <li>Regular emollients and dermatology follow-up</li>
+                        <li>Sun protection and healthy lifestyle</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/fungal infection.webp' %}" alt="Fungal" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Fungal Infections (Ringworm, Tinea)</h3>
+                    <p><em>Type:</em> Superficial dermatophyte infection</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Ring-shaped red patches with a raised, active edge</li>
+                        <li>Itching or burning after sweating</li>
+                        <li>Possible scaling or fissures between toes/folds</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Rapid spread to adjacent skin areas</li>
+                        <li>Secondary bacterial infection due to scratching</li>
+                        <li>Transmission to family members or teammates</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Keep skin dry; avoid sharing towels/clothes</li>
+                        <li>Prompt antifungal treatment</li>
+                        <li>Sanitize clothing and bedding</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/vitiligo-inline-ff7d37.jpg' %}" alt="Vitiligo" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Vitiligo</h3>
+                    <p><em>Type:</em> Autoimmune depigmentation disorder</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Well-defined depigmented patches on fingers or around the mouth</li>
+                        <li>Premature graying of scalp or facial hair</li>
+                        <li>Sensitivity to sunburn on lighter patches</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Spread of existing patches and new areas</li>
+                        <li>Psychosocial stress or self-image concerns</li>
+                        <li>Higher sunburn risk on depigmented skin</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Sun protection on depigmented areas</li>
+                        <li>Dermatology follow-up for repigmentation options</li>
+                        <li>Camouflage as needed for confidence</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/melasma.jpg' %}" alt="Melasma" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Melasma & Hyperpigmentation</h3>
+                    <p><em>Type:</em> Pigmentary disorder</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Symmetrical brown or gray-brown patches on cheeks and forehead</li>
+                        <li>Darkening after sun exposure or hormonal shifts</li>
+                        <li>Diffuse shading on the upper lip or jawline</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Patches deepen in color and surface area</li>
+                        <li>Persistent cosmetic concern affecting confidence</li>
+                        <li>Higher susceptibility to UV-triggered recurrence</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Daily broad-spectrum sunscreen and hats</li>
+                        <li>Avoid known photosensitizers</li>
+                        <li>Dermatology advice for safe lightening agents</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/Rosacea.webp' %}" alt="Rosacea" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Rosacea</h3>
+                    <p><em>Type:</em> Chronic vascular/inflammatory facial dermatosis</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Persistent facial redness and burning sensation</li>
+                        <li>Visible dilated blood vessels on cheeks or nose</li>
+                        <li>Small pus-filled bumps that resemble acne</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Thickened skin (phymas) especially on the nose</li>
+                        <li>Ocular rosacea causing red, irritated eyes</li>
+                        <li>More frequent and intense flushing episodes</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Avoid triggers (alcohol, heat, spicy food)</li>
+                        <li>Use gentle skincare and sunscreen</li>
+                        <li>Seek medical management when flaring</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/impetigo.jpg' %}" alt="Impetigo" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Impetigo</h3>
+                    <p><em>Type:</em> Superficial bacterial infection</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Honey-colored crusts around the nose or mouth</li>
+                        <li>Mild itching or soreness at lesion edges</li>
+                        <li>Rapid development of new, small blisters</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Spread to other body parts or family members</li>
+                        <li>Possible cellulitis or deeper infections</li>
+                        <li>Persistent discomfort for children</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Hygiene, avoid sharing items</li>
+                        <li>Cover lesions; follow prescribed antibiotics</li>
+                        <li>Keep nails short to reduce spread by scratching</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/cd.webp' %}" alt="Contact Dermatitis" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Contact Dermatitis</h3>
+                    <p><em>Type:</em> Allergic or irritant-induced dermatitis</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Itchy, red rash where an irritant touched skin</li>
+                        <li>Swelling or blistering that mirrors the object’s shape</li>
+                        <li>Burning sensation or tenderness after contact</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Chronic irritation and thickened skin</li>
+                        <li>Open sores that invite infection</li>
+                        <li>Difficulty performing tasks due to pain</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Avoid known triggers (patch testing can help)</li>
+                        <li>Use barrier creams/gloves where applicable</li>
+                        <li>Gentle skincare to restore barrier</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/keratosis.jpg' %}" alt="Actinic Keratosis" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Actinic Keratosis</h3>
+                    <p><em>Type:</em> Precancerous lesion from sun damage</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Rough, sandpaper-like patches on sun-exposed sites</li>
+                        <li>Pink, red, or brown scaling areas that persist</li>
+                        <li>Mild tenderness when touched</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Thickening into horn-like lesions</li>
+                        <li>Progression to squamous cell carcinoma (low risk)</li>
+                        <li>Cosmetic concerns on face and hands</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Sun protection (SPF, clothing, shade)</li>
+                        <li>Dermatology evaluation and monitoring</li>
+                        <li>Avoid tanning beds</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/basal-cell-carcinoma.webp' %}" alt="Basal Cell Carcinoma" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Basal Cell Carcinoma (BCC)</h3>
+                    <p><em>Type:</em> Common non-melanoma skin cancer</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Pearly bump or waxy nodule with visible vessels</li>
+                        <li>Non-healing sore that bleeds or crusts</li>
+                        <li>Scar-like patch that slowly enlarges</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Deeper invasion into surrounding tissue</li>
+                        <li>Ulceration and noticeable deformity</li>
+                        <li>Rare spread but significant local destruction</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Sun protection and regular skin checks</li>
+                        <li>Dermatology evaluation of suspicious lesions</li>
+                        <li>Prompt treatment to prevent progression</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="disease-info">
+            <div class="row">
+                <div class="col-sm-4"><img src="{% static 'img/Disease/melanoma.jpg' %}" alt="Melanoma" class="img-responsive"></div>
+                <div class="col-sm-8">
+                    <h3>Melanoma</h3>
+                    <p><em>Type:</em> Aggressive malignant skin cancer</p>
+                    <h4>Early symptoms</h4>
+                    <ul class="stacked-list">
+                        <li>Mole asymmetry, irregular borders, or color variation</li>
+                        <li>Diameter larger than 6mm or rapid evolution</li>
+                        <li>New dark lesion that looks unlike others</li>
+                    </ul>
+                    <h4>If not treated</h4>
+                    <ul class="stacked-list">
+                        <li>Invasion into lymph nodes and distant organs</li>
+                        <li>High mortality if diagnosis is delayed</li>
+                        <li>More aggressive treatments required</li>
+                    </ul>
+                    <h4>Preventive measures</h4>
+                    <ul>
+                        <li>Sun safety and self-exams</li>
+                        <li>Dermatologist skin checks for high-risk individuals</li>
+                        <li>Act early on suspicious changes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- End Disease Info Blocks -->
+
+    </div>
+    </section>
+
+    <div class="container">
+        <p style="text-align:center; color:#777; padding:15px;">
+            <strong>Disclaimer:</strong> The treatments listed are for educational purposes only. Always consult a dermatologist for proper diagnosis and treatment.
+        </p>
+    </div>
+{% endblock %}

@@ -1,0 +1,648 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Register{% endblock %}
+{% block content %}
+
+    <section id="inner-headline">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="pageTitle">Register</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">Create a new account</h3></div>
+                        <div class="panel-body responsive-form">
+                            <div class="alert alert-info" role="alert">
+                                Complete the details below. After successful registration you will see an on-screen acknowledgement
+                                and we will send a confirmation email with a quick link to the Free Diagnosis Tool.
+                            </div>
+                            {% if registration_ack %}
+                            <div class="alert alert-success" role="alert">
+                                <strong>Welcome, {{ registration_ack.full_name }}!</strong> Your profile is active.
+                                <a href="{% url 'start_diagnostics' %}" class="btn btn-xs btn-primary" style="margin-left:6px;">Start Diagnosis</a>
+                            </div>
+                            {% endif %}
+                            <form id="registerForm" method="post" action="{% url 'register' %}" novalidate>
+                                {% csrf_token %}
+                                <input type="hidden" id="emailVerifiedField" name="email_verified" value="{% if email_verified %}true{% else %}false{% endif %}" data-verified-email="{{ verified_email|default:'' }}">
+                                <div class="form-group has-feedback" id="fullNameGroup">
+                                    <label for="full_name">Patient Name:</label>
+                                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Full Name" required value="{{ form_values.full_name|default:'' }}">
+                                    <small id="fullNameError" class="help-block text-danger validation-message"></small>
+                                </div>
+                                <div class="form-group has-feedback" id="ageGroup">
+                                    <label for="age">Age:</label>
+                                    <input type="number" class="form-control" id="age" name="age" placeholder="Age" min="0" max="120" required value="{{ form_values.age|default:'' }}">
+                                    <small id="ageError" class="help-block text-danger validation-message"></small>
+                                </div>
+                                <div class="form-group has-feedback" id="genderGroup">
+                                    <label for="gender">Gender:</label>
+                                    <select class="form-control" id="gender" name="gender" required>
+                                        <option value="">Select</option>
+                                        <option {% if form_values.gender == 'Female' %}selected{% endif %}>Female</option>
+                                        <option {% if form_values.gender == 'Male' %}selected{% endif %}>Male</option>
+                                        <option {% if form_values.gender == 'Other' %}selected{% endif %}>Other</option>
+                                        <option {% if form_values.gender == 'Prefer not to say' %}selected{% endif %}>Prefer not to say</option>
+                                    </select>
+                                    <small id="genderError" class="help-block text-danger validation-message"></small>
+                                </div>
+                                <div class="form-group has-feedback" id="cityGroup">
+                                    <label for="city">City:</label>
+                                    <input type="text" class="form-control" id="city" name="city" placeholder="City" required value="{{ form_values.city|default:'' }}">
+                                    <small id="cityError" class="help-block text-danger validation-message"></small>
+                                </div>
+                                <div class="form-group has-feedback" id="mobileGroup">
+                                    <label for="mobile">Mobile No:</label>
+                                    <input type="tel" class="form-control" id="mobile" name="mobile" placeholder="10-digit mobile number" pattern="^[0-9]{10}$" required value="{{ form_values.mobile|default:'' }}">
+                                    <small class="form-text text-muted">Enter 10 digits only.</small>
+                                    <small id="mobileError" class="help-block text-danger validation-message"></small>
+                                </div>
+                                <div class="form-group has-feedback" id="usernameGroup">
+                                    <label for="username">Username:</label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Create Username" required aria-describedby="usernameHelp" value="{{ form_values.username|default:'' }}">
+                                    <small id="usernameHelp" class="form-text text-muted">3-20 characters, letters and digits only.</small>
+                                    <small id="usernameError" class="help-block text-danger validation-message"></small>
+                                </div>
+                                <div class="form-group has-feedback" id="emailGroup">
+                                    <label for="email">Email:</label>
+                                    <div class="input-group email-otp-group">
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" required aria-describedby="emailHelp" value="{{ form_values.email|default:'' }}">
+                                        <span class="input-group-btn"><button type="button" class="btn btn-default" id="sendOtpBtn">Send OTP</button></span>
+                                    </div>
+                                    <small id="emailHelp" class="form-text text-muted">Enter a valid email address.</small>
+                                    <small id="emailError" class="help-block text-danger validation-message"></small>
+                                    <div id="emailOtpStatus" class="alert" role="alert" style="display:none;"></div>
+                                </div>
+                                <div class="form-group has-feedback" id="otpGroup" style="display:none;">
+                                    <label for="emailOtp">Enter OTP:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="emailOtp" name="email_otp" placeholder="6-digit code" pattern="^[0-9]{6}$" inputmode="numeric">
+                                        <span class="input-group-btn"><button type="button" class="btn btn-default" id="verifyOtpBtn">Verify</button></span>
+                                    </div>
+                                    <small id="otpHelp" class="form-text text-muted">Enter the 6-digit code sent to your email. The code expires in 10 minutes.</small>
+                                    <small id="otpError" class="help-block text-danger validation-message"></small>
+                                </div>
+                                <div class="form-group has-feedback" id="passwordGroup">
+                                    <label for="password">Password:</label>
+                                    <div class="input-group password-toggle-group">
+                                      <input type="password" class="form-control" id="password" name="password" placeholder="Password" required aria-describedby="pwdHelp capsWarning">
+                                      <span class="input-group-addon password-toggle" id="togglePwd" role="button" tabindex="0" aria-label="Toggle password visibility"><i class="fa fa-eye"></i></span>
+                                    </div>
+                                    <small id="pwdHelp" class="form-text text-muted">Min 8 chars, with uppercase, lowercase, number, and special character.</small>
+                                    <small id="capsWarning" class="form-text text-warning" style="display:none;">Warning: Caps Lock is on.</small>
+                                    <div class="progress" style="margin-top:8px; height:8px;">
+                                      <div id="pwdStrength" class="progress-bar" role="progressbar" style="width:0%"></div>
+                                    </div>
+                                    <small id="passwordError" class="help-block text-danger validation-message"></small>
+                                </div>
+                                <div class="form-group has-feedback" id="confirmGroup">
+                                    <label for="confirmpassword">Confirm Password:</label>
+                                    <div class="input-group password-toggle-group">
+                                      <input type="password" class="form-control" id="confirmpassword" name="confirmpassword" placeholder="Confirm Password" required aria-describedby="confirmHelp">
+                                      <span class="input-group-addon password-toggle" id="toggleConfirm" role="button" tabindex="0" aria-label="Toggle confirm password visibility"><i class="fa fa-eye"></i></span>
+                                    </div>
+                                    <small id="confirmHelp" class="form-text text-muted">Must match the password.</small>
+                                    <small id="confirmError" class="help-block text-danger validation-message"></small>
+                                </div>
+                                <div id="registerFormAlert" class="alert alert-danger" role="alert" {% if not error %}style="display:none;"{% endif %}>{{ error }}</div>
+                                <button type="submit" class="btn btn-success btn-block">Register</button>
+                            </form>
+                            <div class="mt-3 text-center">
+                                <hr>
+                                <p>Already registered? <a href="{% url 'login' %}">Login here</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block extra_js %}
+<script>
+(function(){
+  var form = document.getElementById('registerForm');
+  if(!form) { return; }
+
+  var refs = {
+    full_name: { input: document.getElementById('full_name'), group: document.getElementById('fullNameGroup'), error: document.getElementById('fullNameError') },
+    age: { input: document.getElementById('age'), group: document.getElementById('ageGroup'), error: document.getElementById('ageError') },
+    gender: { input: document.getElementById('gender'), group: document.getElementById('genderGroup'), error: document.getElementById('genderError') },
+    city: { input: document.getElementById('city'), group: document.getElementById('cityGroup'), error: document.getElementById('cityError') },
+    mobile: { input: document.getElementById('mobile'), group: document.getElementById('mobileGroup'), error: document.getElementById('mobileError') },
+    username: { input: document.getElementById('username'), group: document.getElementById('usernameGroup'), error: document.getElementById('usernameError') },
+    email: { input: document.getElementById('email'), group: document.getElementById('emailGroup'), error: document.getElementById('emailError') },
+    otp: { input: document.getElementById('emailOtp'), group: document.getElementById('otpGroup'), error: document.getElementById('otpError') },
+    password: { input: document.getElementById('password'), group: document.getElementById('passwordGroup'), error: document.getElementById('passwordError') },
+    confirm: { input: document.getElementById('confirmpassword'), group: document.getElementById('confirmGroup'), error: document.getElementById('confirmError') }
+  };
+
+  var otpGroup = refs.otp ? refs.otp.group : null;
+  var capsWarning = document.getElementById('capsWarning');
+  var pwdStrength = document.getElementById('pwdStrength');
+  var emailVerifiedField = document.getElementById('emailVerifiedField');
+  var sendOtpBtn = document.getElementById('sendOtpBtn');
+  var verifyOtpBtn = document.getElementById('verifyOtpBtn');
+  var emailOtpStatus = document.getElementById('emailOtpStatus');
+  var registerFormAlert = document.getElementById('registerFormAlert');
+  var serverErrorMessage = "{{ error|default:''|escapejs }}";
+
+  var countdownTimer = null;
+  var initialVerifiedEmail = emailVerifiedField ? (emailVerifiedField.getAttribute('data-verified-email') || '').trim().toLowerCase() : '';
+  var verifiedEmail = initialVerifiedEmail || null;
+
+  if(registerFormAlert){
+    if(serverErrorMessage){
+      registerFormAlert.textContent = serverErrorMessage;
+      registerFormAlert.style.display = 'block';
+      registerFormAlert.dataset.server = 'true';
+    } else {
+      registerFormAlert.style.display = 'none';
+    }
+  }
+
+  function setFieldError(ref, message){
+    if(!ref || !ref.group || !ref.error){ return; }
+    if(message){
+      ref.group.classList.add('has-error');
+      ref.error.textContent = message;
+      ref.error.style.display = 'block';
+    } else {
+      ref.group.classList.remove('has-error');
+      ref.error.textContent = '';
+      ref.error.style.display = 'none';
+    }
+  }
+
+  function clearAllFieldErrors(){
+    Object.keys(refs).forEach(function(key){
+      setFieldError(refs[key], null);
+    });
+  }
+
+  function showFormError(message){
+    if(!registerFormAlert){ return; }
+    registerFormAlert.textContent = message;
+    registerFormAlert.style.display = 'block';
+    delete registerFormAlert.dataset.server;
+  }
+
+  function clearFormError(){
+    if(registerFormAlert && registerFormAlert.dataset.server !== 'true'){
+      registerFormAlert.style.display = 'none';
+      registerFormAlert.textContent = '';
+    }
+  }
+
+  function showOtpStatus(message, level){
+    if(!emailOtpStatus){ return; }
+    emailOtpStatus.className = 'alert alert-' + (level || 'info');
+    emailOtpStatus.textContent = message;
+    emailOtpStatus.style.display = 'block';
+  }
+
+  function hideOtpStatus(){
+    if(!emailOtpStatus){ return; }
+    emailOtpStatus.style.display = 'none';
+    emailOtpStatus.textContent = '';
+    emailOtpStatus.className = 'alert';
+  }
+
+  function clearCountdown(resetLabel){
+    if(countdownTimer){
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+    if(resetLabel && sendOtpBtn){
+      sendOtpBtn.disabled = false;
+      sendOtpBtn.textContent = 'Send OTP';
+      sendOtpBtn.removeAttribute('aria-busy');
+    }
+  }
+
+  function startCountdown(seconds){
+    if(!sendOtpBtn){ return; }
+    clearCountdown(false);
+    var remaining = Math.max(parseInt(seconds, 10) || 0, 0);
+    if(remaining <= 0){
+      clearCountdown(true);
+      return;
+    }
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = 'Resend (' + remaining + 's)';
+    countdownTimer = setInterval(function(){
+      remaining -= 1;
+      if(remaining <= 0){
+        clearCountdown(true);
+      } else {
+        sendOtpBtn.textContent = 'Resend (' + remaining + 's)';
+      }
+    }, 1000);
+  }
+
+  function resetVerificationState(){
+    verifiedEmail = null;
+    if(emailVerifiedField){
+      emailVerifiedField.value = 'false';
+      emailVerifiedField.setAttribute('data-verified-email', '');
+    }
+    if(refs.otp){
+      refs.otp.input.value = '';
+      refs.otp.input.disabled = false;
+      setFieldError(refs.otp, null);
+    }
+    hideOtpStatus();
+    clearCountdown(true);
+    if(verifyOtpBtn){
+      verifyOtpBtn.disabled = false;
+      verifyOtpBtn.textContent = 'Verify';
+      verifyOtpBtn.removeAttribute('aria-busy');
+    }
+    if(refs.email){
+      delete refs.email.input.dataset.verifiedEmail;
+    }
+    if(otpGroup){
+      otpGroup.style.display = 'none';
+    }
+  }
+
+  function markEmailVerified(emailValue){
+    if(emailVerifiedField){
+      emailVerifiedField.value = 'true';
+      emailVerifiedField.setAttribute('data-verified-email', verifiedEmail);
+    }
+    verifiedEmail = (emailValue || '').trim().toLowerCase();
+    if(refs.email){
+      refs.email.input.dataset.verifiedEmail = verifiedEmail;
+    }
+    if(sendOtpBtn){
+      clearCountdown(false);
+      sendOtpBtn.disabled = true;
+      sendOtpBtn.textContent = 'Verified';
+      sendOtpBtn.removeAttribute('aria-busy');
+    }
+    if(verifyOtpBtn){
+      verifyOtpBtn.disabled = true;
+      verifyOtpBtn.textContent = 'Verified';
+      verifyOtpBtn.removeAttribute('aria-busy');
+    }
+    if(refs.otp){
+      refs.otp.input.disabled = true;
+      setFieldError(refs.otp, null);
+    }
+    showOtpStatus('Email verified successfully.', 'success');
+  }
+
+  function isValidEmail(value){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  function isValidUsername(value){
+    return /^[A-Za-z0-9]{3,20}$/.test(value);
+  }
+
+  function isValidMobile(value){
+    return /^[0-9]{10}$/.test(value);
+  }
+
+  function meetsPolicy(password){
+    return password.length >= 8 &&
+      /[A-Z]/.test(password) &&
+      /[a-z]/.test(password) &&
+      /\d/.test(password) &&
+      /[^A-Za-z0-9]/.test(password);
+  }
+
+  function updateStrength(password){
+    if(!pwdStrength){ return; }
+    var score = 0;
+    if(password.length >= 8) score += 1;
+    if(/[A-Z]/.test(password)) score += 1;
+    if(/[a-z]/.test(password)) score += 1;
+    if(/\d/.test(password)) score += 1;
+    if(/[^A-Za-z0-9]/.test(password)) score += 1;
+    var pct = (score / 5) * 100;
+    pwdStrength.style.width = pct + '%';
+    var cls = 'bg-danger';
+    if(pct >= 80){ cls = 'bg-success'; }
+    else if(pct >= 60){ cls = 'bg-info'; }
+    else if(pct >= 40){ cls = 'bg-warning'; }
+    pwdStrength.className = 'progress-bar ' + cls;
+  }
+
+  function getCookie(name){
+    var cookieValue = null;
+    if(document.cookie && document.cookie !== ''){
+      var cookies = document.cookie.split(';');
+      for(var i = 0; i < cookies.length; i++){
+        var cookie = cookies[i].trim();
+        if(cookie.substring(0, name.length + 1) === (name + '=')){
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  if(refs.password && capsWarning){
+    refs.password.input.addEventListener('keyup', function(e){
+      var isCaps = e.getModifierState && e.getModifierState('CapsLock');
+      capsWarning.style.display = isCaps ? 'inline' : 'none';
+    });
+    refs.password.input.addEventListener('input', function(){
+      updateStrength(refs.password.input.value);
+    });
+    updateStrength(refs.password.input.value);
+  }
+
+  if(refs.confirm){
+    refs.confirm.input.addEventListener('input', function(){
+      if(refs.password.input.value && refs.confirm.input.value && refs.password.input.value !== refs.confirm.input.value){
+        setFieldError(refs.confirm, 'Passwords do not match.');
+      } else {
+        setFieldError(refs.confirm, null);
+      }
+    });
+  }
+
+  Object.keys(refs).forEach(function(key){
+    var ref = refs[key];
+    if(!ref || !ref.input){ return; }
+    var eventName = key === 'gender' ? 'change' : 'input';
+    ref.input.addEventListener(eventName, function(){
+      setFieldError(ref, null);
+      clearFormError();
+      if(key === 'email'){
+        var current = ref.input.value.trim().toLowerCase();
+        if(verifiedEmail && current !== verifiedEmail){
+          resetVerificationState();
+        }
+      }
+    });
+  });
+
+  if(refs.otp && verifyOtpBtn){
+    refs.otp.input.addEventListener('keyup', function(evt){
+      if(evt.key === 'Enter'){
+        verifyOtpBtn.click();
+      }
+    });
+  }
+
+  function applyInitialVerificationState(){
+    if(!emailVerifiedField || emailVerifiedField.value !== 'true' || !verifiedEmail){
+      return;
+    }
+    if(refs.email){
+      refs.email.input.dataset.verifiedEmail = verifiedEmail;
+    }
+    if(sendOtpBtn){
+      sendOtpBtn.disabled = true;
+      sendOtpBtn.textContent = 'Verified';
+      sendOtpBtn.removeAttribute('aria-busy');
+    }
+    if(verifyOtpBtn){
+      verifyOtpBtn.disabled = true;
+      verifyOtpBtn.textContent = 'Verified';
+      verifyOtpBtn.removeAttribute('aria-busy');
+    }
+    if(refs.otp){
+      if(refs.otp.group){
+        refs.otp.group.style.display = 'none';
+      }
+      refs.otp.input.disabled = true;
+    }
+    showOtpStatus('Email verified successfully.', 'success');
+  }
+
+  applyInitialVerificationState();
+
+  function validateForm(){
+    var valid = true;
+    clearFormError();
+    clearAllFieldErrors();
+
+    var nameValue = refs.full_name.input.value.trim();
+    if(!nameValue){
+      setFieldError(refs.full_name, 'Patient name is required.');
+      valid = false;
+    }
+
+    var ageValue = parseInt(refs.age.input.value, 10);
+    if(isNaN(ageValue) || ageValue < 0 || ageValue > 120){
+      setFieldError(refs.age, 'Enter a valid age between 0 and 120.');
+      valid = false;
+    }
+
+    if(!refs.gender.input.value){
+      setFieldError(refs.gender, 'Select your gender.');
+      valid = false;
+    }
+
+    if(!refs.city.input.value.trim()){
+      setFieldError(refs.city, 'City is required.');
+      valid = false;
+    }
+
+    if(!isValidMobile(refs.mobile.input.value.trim())){
+      setFieldError(refs.mobile, 'Enter a valid 10-digit mobile number.');
+      valid = false;
+    }
+
+    var usernameValue = refs.username.input.value.trim();
+    if(!isValidUsername(usernameValue)){
+      setFieldError(refs.username, 'Username must be 3-20 characters, letters and digits only.');
+      valid = false;
+    }
+
+    var emailValue = refs.email.input.value.trim();
+    if(!isValidEmail(emailValue)){
+      setFieldError(refs.email, 'Enter a valid email address.');
+      valid = false;
+    }
+
+    var passwordValue = refs.password.input.value;
+    if(!meetsPolicy(passwordValue)){
+      setFieldError(refs.password, 'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.');
+      valid = false;
+    }
+
+    if(passwordValue !== refs.confirm.input.value){
+      setFieldError(refs.confirm, 'Passwords do not match.');
+      valid = false;
+    }
+
+    if(emailVerifiedField.value !== 'true' || !verifiedEmail || verifiedEmail !== emailValue.toLowerCase()){
+      setFieldError(refs.email, 'Please verify your email with the OTP before continuing.');
+      if(refs.otp){
+        setFieldError(refs.otp, 'Email verification is required.');
+      }
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  form.addEventListener('submit', function(e){
+    if(!validateForm()){
+      e.preventDefault();
+      showFormError('Please fix the highlighted fields and try again.');
+    }
+  });
+
+  function setupToggle(toggleEl, inputEl){
+    if(!toggleEl || !inputEl){ return; }
+    function toggleVisibility(){
+      var nextType = inputEl.getAttribute('type') === 'password' ? 'text' : 'password';
+      inputEl.setAttribute('type', nextType);
+      toggleEl.setAttribute('aria-pressed', nextType === 'text');
+      toggleEl.setAttribute('aria-label', nextType === 'text' ? 'Hide password' : 'Show password');
+      var icon = toggleEl.querySelector('i');
+      if(icon){
+        if(nextType === 'text'){
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        } else {
+          icon.classList.add('fa-eye');
+          icon.classList.remove('fa-eye-slash');
+        }
+      }
+    }
+    toggleEl.addEventListener('click', function(){
+      toggleVisibility();
+    });
+    toggleEl.addEventListener('keydown', function(evt){
+      if(evt.key === 'Enter' || evt.key === ' '){
+        evt.preventDefault();
+        toggleVisibility();
+      }
+    });
+  }
+
+  setupToggle(document.getElementById('togglePwd'), refs.password ? refs.password.input : null);
+  setupToggle(document.getElementById('toggleConfirm'), refs.confirm ? refs.confirm.input : null);
+
+  if(sendOtpBtn){
+    sendOtpBtn.addEventListener('click', function(){
+      var emailValue = refs.email.input.value.trim();
+      setFieldError(refs.email, null);
+      hideOtpStatus();
+      clearFormError();
+
+      if(!isValidEmail(emailValue)){
+        setFieldError(refs.email, 'Enter a valid email address before requesting an OTP.');
+        refs.email.input.focus();
+        return;
+      }
+
+      verifiedEmail = null;
+      if(emailVerifiedField){
+        emailVerifiedField.value = 'false';
+      }
+
+      sendOtpBtn.disabled = true;
+      sendOtpBtn.textContent = 'Sending...';
+      sendOtpBtn.setAttribute('aria-busy', 'true');
+
+      fetch('/send-email-otp/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ email: emailValue })
+      }).then(function(response){
+        return response.json().then(function(data){ return { response: response, data: data }; });
+      }).then(function(result){
+        var response = result.response;
+        var data = result.data || {};
+        if(!response.ok || data.ok === false){
+          throw new Error(data.error || 'Unable to send OTP. Please try again.');
+        }
+        if(otpGroup){
+          otpGroup.style.display = 'block';
+        }
+        if(refs.otp){
+          refs.otp.input.disabled = false;
+          refs.otp.input.focus();
+        }
+        showOtpStatus(data.message || 'OTP sent to your email address.', 'info');
+        var resendIn = typeof data.resend_in === 'number' ? data.resend_in : 60;
+        startCountdown(resendIn);
+      }).catch(function(err){
+        setFieldError(refs.email, err.message || 'Unable to send OTP.');
+        showOtpStatus(err.message || 'Unable to send OTP.', 'danger');
+        clearCountdown(true);
+      }).finally(function(){
+        sendOtpBtn.removeAttribute('aria-busy');
+        if(countdownTimer === null && (!verifiedEmail || (emailVerifiedField && emailVerifiedField.value !== 'true'))){
+          sendOtpBtn.disabled = false;
+          sendOtpBtn.textContent = 'Send OTP';
+        }
+      });
+    });
+  }
+
+  if(verifyOtpBtn){
+    verifyOtpBtn.addEventListener('click', function(){
+      var emailValue = refs.email.input.value.trim();
+      var otpValue = (refs.otp.input.value || '').trim();
+      setFieldError(refs.otp, null);
+      hideOtpStatus();
+      clearFormError();
+
+      if(!isValidEmail(emailValue)){
+        setFieldError(refs.email, 'Enter a valid email address before verifying.');
+        refs.email.input.focus();
+        return;
+      }
+
+      if(!/^\d{6}$/.test(otpValue)){
+        setFieldError(refs.otp, 'Enter the 6-digit OTP sent to your email.');
+        refs.otp.input.focus();
+        return;
+      }
+
+      verifyOtpBtn.disabled = true;
+      verifyOtpBtn.textContent = 'Verifying...';
+      verifyOtpBtn.setAttribute('aria-busy', 'true');
+
+      fetch('/verify-email-otp/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ email: emailValue, otp: otpValue })
+      }).then(function(response){
+        return response.json().then(function(data){ return { response: response, data: data }; });
+      }).then(function(result){
+        var response = result.response;
+        var data = result.data || {};
+        if(!response.ok || data.ok === false){
+          throw new Error(data.error || 'OTP verification failed. Please try again.');
+        }
+        markEmailVerified(emailValue);
+      }).catch(function(err){
+        setFieldError(refs.otp, err.message || 'OTP verification failed.');
+        showOtpStatus(err.message || 'OTP verification failed.', 'danger');
+        verifyOtpBtn.disabled = false;
+        verifyOtpBtn.textContent = 'Verify';
+      }).finally(function(){
+        verifyOtpBtn.removeAttribute('aria-busy');
+      });
+    });
+  }
+
+})();
+</script>
+{% endblock %}
+

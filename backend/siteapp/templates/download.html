@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% load static %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report</title>
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+<style>
+    body {
+        background-color: var(--color-bg);
+        font-family: Arial, sans-serif;
+    }
+    .report-container {
+        border: 2px solid var(--color-neutral);
+        background: #fff;
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 30px;
+    }
+    /* Header */
+    .report-header {
+        border-bottom: 3px solid var(--color-primary);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .report-header h2 {
+        font-weight: bold;
+        color: var(--color-primary);
+        margin: 0;
+    }
+    .contact-info {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+    /* Patient/Sample Info */
+    .info-box {
+        border: 1px solid var(--color-neutral);
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+    .info-row p {
+        margin: 0;
+        font-size: 14px;
+    }
+    /* Section Title */
+    .section-title {
+        background: var(--color-primary);
+        color: #fff;
+        font-weight: bold;
+        padding: 8px 12px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+    /* Table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+    }
+    table, th, td {
+        border: 1px solid var(--color-neutral);
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    th {
+        background: #f1f1f1;
+    }
+    /* Footer */
+    .report-footer {
+        border-top: 2px solid var(--color-neutral);
+        margin-top: 30px;
+        padding-top: 10px;
+        font-size: 13px;
+        text-align: center;
+    }
+    .signatures {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+        font-size: 14px;
+    }
+</style>
+</head>
+<body>
+<div class="report-container">
+    <!-- Header -->
+    <div class="report-header text-center">
+        <h2>World of Aesthetics – Hair and Skin Clinic</h2>
+        <p class="contact-info">
+            Address: 27/2, Laxmi-Villa Bunglow, Hingne Khurd, Pune-Sinhagad Road, Pune, Maharashtra. Pincode - 411051 <br>
+            Phone: +91 9850047358 | Email: touch@gmail.com
+        </p>
+    </div>
+
+    <!-- Patient Info -->
+    <div class="info-box">
+        <div class="info-row">
+            <p><strong>Name:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</p>
+            <p><strong>Email:</strong> {{ request.user.email }}</p>
+        </div>
+        <div class="info-row">
+            <p><strong>Report ID:</strong> {{ analysis.id|default:"—" }}</p>
+            <p><strong>Date:</strong> {{ analysis.created_at|date:"Y-m-d H:i"|default:"—" }}
+</p>
+        </div>
+    </div>
+
+    <!-- Report Title -->
+    <h4 class="text-center"><u>Report</u></h4>
+
+    <!-- Detection Results -->
+    <div class="section-title">Detection Results</div>
+    <table>
+        <tr>
+            <th>Predicted Disease</th>
+            <td id="predictedDisease">{{ primary_disease|default:"__________" }}</td>
+        </tr>
+        <tr>
+            <th>Confidence Score</th>
+            <td id="confidenceScore">{{ primary_confidence|default:"__________" }}</td>
+        </tr>
+        <tr>
+            <th>Selected Symptoms</th>
+            <td id="selectedSymptoms">{{ symptoms_str|default:"__________" }}</td>
+        </tr>
+    </table>
+    <div class="section-title">Top Predictions</div>
+    <table>
+        <tr>
+            <th>#</th>
+            <th>Disease</th>
+            <th>Confidence</th>
+        </tr>
+        <tbody id="predTable">
+        {% if predictions %}
+            {% for p in predictions %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ p.disease }}</td>
+                <td>{{ p.confidence }}</td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+
+    <!-- Uploaded Image -->
+    <div class="section-title">Uploaded Skin Image</div>
+    <div class="text-center">
+        {% if analysis and analysis.image %}
+            <img src="{{ analysis.image.url }}" alt="Uploaded skin image" style="max-width: 360px; max-height: 360px; border-radius: 8px; border:1px solid var(--color-neutral);">
+        {% else %}
+            <p>[ Image Preview Unavailable ]</p>
+        {% endif %}
+    </div>
+
+    <!-- Doctor’s Recommendations -->
+    <div class="section-title">Doctor’s Recommendations</div>
+    <p>[ Recommendations List ]</p>
+
+    <!-- Footer -->
+    <div class="report-footer">
+        <p>End of Report</p>
+    </div>
+
+    <!-- Signatures -->
+    <div class="signatures">
+        <div>_________________<br>Dr. XYZ (Dermatologist)</div>
+    </div>
+
+    <!-- Download -->
+    <div class="btn-download text-center">
+        <button onclick="window.print()" class="btn btn-primary">Download PDF</button>
+    </div>
+</div>
+</body>
+</html>

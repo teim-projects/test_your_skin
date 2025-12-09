@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Contact Us{% endblock %}
+{% block extra_head %}
+
+<style>
+/* New styles to mimic the contact box from the image */
+.contact-info-box {
+    border: 2px solid var(--color-primary);
+    border-radius: 10px;
+    padding: 25px 30px;
+    background: var(--color-bg);
+    color: var(--color-primary);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 550px;
+    margin-top: 20px;
+    box-shadow: 0 0 8px var(--color-neutral);
+}
+.contact-info-box h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 28px;
+    color: var(--color-primary);
+}
+.contact-info-box hr {
+    border: 1.5px solid var(--color-primary);
+    margin-bottom: 20px;
+    width: 100%;
+}
+.contact-info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 17px;
+}
+.contact-info-item i {
+    font-size: 20px;
+    margin-right: 12px;
+    color: var(--color-primary);
+    min-width: 30px;
+    text-align: center;
+}
+.contact-info-item a {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+</style>
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<!-- FontAwesome CDN for icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+
+    <section id="inner-headline">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="pageTitle">Contact Us</h2>
+            </div>
+        </div>
+    </div>
+    </section>
+
+    <section id="content">
+    <div class="container">
+        <div class="row"> 
+            <div class="col-md-6">
+
+                <div class="contact-info-box">
+                    <h2>Contact Us</h2>
+                    <hr />
+                    <div class="contact-info-item">
+                        <i class="fa fa-map-marker"></i>
+                        <span><strong>Address:</strong> 27/2, Laxmi-Villa Bunglow, Hingne Khurd, Pune-Sinhagad Road, Pune, Maharashtra. Pincode - 411051</span>
+                    </div>
+                    <div class="contact-info-item">
+                        <i class="fa fa-phone"></i>
+                        <span><strong>Phone:</strong> +91 9850047358</span>
+                    </div>
+                    <div class="contact-info-item">
+                        <i class="fa fa-envelope"></i>
+                        <span><strong>Email:</strong> <a href="mailto:connect@teim.in">connect@teim.in</a></span>
+                    </div>
+                    <div class="contact-info-item">
+                        <i class="fa fa-globe"></i>
+                        <span><strong>Website:</strong> <a href="http://www.teim.co.in" target="_blank">http://www.teim.co.in</a></span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 40px;">
+                    <p>Our friendly staff is ready to help you from Monday to Friday, 9 AM to 6 PM.</p>
+                    <div class="done">
+                        <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert">×</button>
+                            Your message has been sent. Thank you!
+                        </div>
+                    </div>
+                    <div class="contact-form">
+                        <form method="post" action="contact.php" id="contactform" class="contact">
+                            <div class="form-group has-feedback">
+                                <label for="name">Name*</label>
+                                <input type="text" class="form-control" name="name" placeholder="Your Full Name" required>
+                                <i class="fa fa-user form-control-feedback"></i>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label for="email">Email*</label>
+                                <input type="email" class="form-control" name="email" placeholder="you@example.com" required>
+                                <i class="fa fa-envelope form-control-feedback"></i>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label for="message">Message*</label>
+                                <textarea class="form-control" rows="6" name="comment" placeholder="Write your message here..." required></textarea>
+                                <i class="fa fa-pencil form-control-feedback"></i>
+                            </div>
+                            <input type="submit" value="Submit" id="submit" class="submit btn btn-default">
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+                <div style="overflow:hidden;height:500px;width:100%;">
+                    <div id="gmap_canvas" style="height:500px;width:100%;"></div>
+                    <style>#gmap_canvas img{max-width:none!important;background:none!important}</style>
+                    <a class="google-map-code" href="http://www.trivoo.net" id="get-map-data">trivoo</a>
+                </div>
+                <script type="text/javascript"> 
+                    function init_map(){
+                        var myOptions = {
+                          zoom:14,
+                          center:new google.maps.LatLng(40.805478,-73.96522499999998),
+                          mapTypeId: google.maps.MapTypeId.ROADMAP
+                        };
+                        map = new google.maps.Map(document.getElementById("gmap_canvas"), myOptions);
+                        marker = new google.maps.Marker({
+                            map: map,
+                            position: new google.maps.LatLng(40.805478, -73.96522499999998)
+                        });
+                        infowindow = new google.maps.InfoWindow({
+                           content:"<b>The Breslin</b><br/>2880 Broadway<br/> New York" 
+                        });
+                        google.maps.event.addListener(marker, "click", function(){
+                            infowindow.open(map,marker);
+                        });
+                        infowindow.open(map,marker);
+                    }
+                    google.maps.event.addDomListener(window, 'load', init_map);
+                </script>
+            </div>
+        </div>
+    </div>
+    </section>
+{% endblock %}

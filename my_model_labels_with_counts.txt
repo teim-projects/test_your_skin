@@ -1,0 +1,11 @@
+Acne	1832
+Basal Cell Carcinoma (BCC) 3323	3323
+Benign Keratosis-like Lesions (BKL) 2624	2079
+CD	147
+Clear_Skin	124
+Fungal Infection	1702
+Impetigo	18
+Melanoma 15.75k	3140
+Psoriasis pictures Lichen Planus and related diseases - 2k	2055
+melasma And hyperpigmentation	123
+rosacea	73
