@@ -4,8 +4,15 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = 'dev-secret-key'
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+DEBUG = False
+
+ALLOWED_HOSTS = [
+    'testyourskin.online',
+    'www.testyourskin.online',
+    '91.99.119.240',
+    '127.0.0.1',
+]
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
