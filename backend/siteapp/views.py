@@ -23,7 +23,6 @@ import logging
 import h5py
 import sys
 import uuid
-import imghdr
 from .models import Analysis, Profile
 
 from .ml.disease_prediction_service import DiseasePredictionService
@@ -663,11 +662,11 @@ def predict(request: HttpRequest) -> JsonResponse:
         try:
             ext = '.jpg'
             try:
-                fmt = imghdr.what(None, h=raw)
-                if fmt:
-                    ext = '.' + ('jpg' if fmt == 'jpeg' else fmt)
+                img_temp = Image.open(BytesIO(raw))
+                ext = '.' + (img_temp.format.lower() if img_temp.format else 'jpg')
             except Exception:
                 pass
+
             fname = f"{uuid.uuid4().hex}{ext}"
             upload_dir = os.path.join(str(settings.MEDIA_ROOT), 'uploads')
             os.makedirs(upload_dir, exist_ok=True)

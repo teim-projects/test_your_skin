@@ -936,6 +936,18 @@ font-weight: 700 !important;
     /* padding-top: 12px; */
 }
 
+#banner {
+    width: 100%;
+    overflow: hidden;
+}
+
+.flexslider {
+    height: 360px;
+    max-height: 360px;
+    overflow: hidden;
+}
+
+
 /*  Sliders
 ==================================== */
 /* --- flexslider --- */
