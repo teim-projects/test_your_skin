@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% load static %}
+<meta charset="utf-8">
+<title>Registration Successful</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+<link href="{% static 'css/style.css' %}" rel="stylesheet" />
+</head>
+<body>
+<div id="wrapper">
+    <header>
+        <div class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'img/TEIM LOGO.png' %}" alt="TEIM Logo"/></a>
+                </div>
+                <div class="navbar-collapse collapse ">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li><a href="{% url 'about' %}">About Us</a></li>
+                        <li><a href="{% url 'treatment' %}">Disease</a></li>
+                        <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="inner-headline">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="pageTitle">Registration Successful</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">Thank you, {{ ack.full_name }}!</h3></div>
+                        <div class="panel-body">
+                            <p>Your registration has been received and a confirmation email has been sent to <strong>{{ ack.email }}</strong>.</p>
+                            <p>We have recorded the following details:</p>
+                            <ul class="list-unstyled">
+                                <li><strong>Age:</strong> {{ ack.age }}</li>
+                                <li><strong>Gender:</strong> {{ ack.gender }}</li>
+                                <li><strong>City:</strong> {{ ack.city }}</li>
+                                <li><strong>Mobile:</strong> {{ ack.mobile }}</li>
+                                <li><strong>Email:</strong> {{ ack.email }}</li>
+                            </ul>
+                            <hr>
+                            <p>Proceed to our free primary screening tool to upload a skin image and get indicative results.</p>
+                            <a href="{% url 'start_diagnostics' %}" class="btn btn-primary">Start Diagnostics</a>
+                            <a href="{% url 'contact' %}" class="btn btn-default" style="margin-left:8px;">Need Help?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>
+
+

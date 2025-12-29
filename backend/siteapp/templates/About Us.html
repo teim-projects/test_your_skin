@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About Us{% endblock %}
+{% block content %}
+
+    <section id="inner-headline">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="pageTitle">About Us</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content">
+        <div class="container">
+            <div class="about">
+                <div class="row">
+            <div class="col-md-12">
+                <div class="about-logo">
+                    <h3>Get to Know TEIM<span class="color"> Team</span></h3>
+                    <p>
+                        TEIM (Technology Enabled Industry Management) blends data science, design thinking, and healthcare expertise
+                        to build solutions that solve real-world problems. We create analytics products, offer domain-led consulting,
+                        and train teams to adopt responsible AI.
+                    </p>
+                    <p>
+                        This skin-screening web application is part of our mission to democratize early dermatology insights. It delivers
+                        visual explanations, easy report sharing, and hand-offs to medical experts—while reminding users that doctors
+                        provide the final diagnosis.
+                    </p>
+                </div>
+                <div class="section-heading" style="margin-top:20px;">
+                    <span>What we do</span>
+                    <h2>TEIM Services at a Glance</h2>
+                    <p>Built for hospitals, wellness brands, and population-health programs.</p>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="card-soft">
+                            <h4>AI &amp; Analytics</h4>
+                            <p>Custom models for skin-image triage, chronic disease detection, and risk alerts.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card-soft">
+                            <h4>Clinical UX Design</h4>
+                            <p>Patient-friendly dashboards, bilingual summaries, and seamless referral flows.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card-soft">
+                            <h4>Training &amp; Support</h4>
+                            <p>Guided onboarding for hospital teams plus refresher learning for field workers.</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="{% url 'contact' %}" class="btn btn-color">Talk to TEIM</a>  
+            </div>
+                </div>
+                <hr>
+                <br>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card-soft">
+                    <h3>Mission</h3>
+                    <p>
+                        Empower every household to run a primary skin health check within minutes and carry that insight to
+                        dermatologists for timely intervention. We focus on accessibility, affordability, and empathy.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-soft">
+                    <h3>Purpose of this Application</h3>
+                    <ul class="stacked-list">
+                        <li>Guide users on whether a spot appears urgent or routine.</li>
+                        <li>Collect structured context (age, gender, symptoms) that doctors can review quickly.</li>
+                        <li>Send post-scan instructions encouraging appointments, lifestyle care, and follow-up scans.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card-soft">
+                            <div class="block-heading-two">
+                                <h3><span>Why Choose Us?</span></h3>
+                            </div>
+                            <p>
+                                We blend real-world industry experience with robust analytics and modern engineering. For healthcare, that means safe, privacy-conscious tools that empower users with better information and timely action.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-soft">
+                            <div class="block-heading-two">
+                                <h3><span>Our Mission</span></h3>
+                            </div>
+                            <strong>2025</strong>
+                            <p>
+                                Our mission is to turn complex data into clear, actionable insights. We pioneer "Fourth Dimension Analytics" to time decisions effectively and responsibly.
+                            </p>
+                            <p>
+                                This Skin Disease Predictor and Severity Analyzer demonstrates our commitment to early warnings and better outcomes through accessible AI.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-soft">
+                            <h3>Brief Services</h3>
+                            <ul class="list2">
+                                <li><a href="#">AI-assisted screening tools (e.g., skin disease)</a></li>
+                                <li><a href="#">Business/Data Analytics consulting</a></li>
+                                <li><a href="#">Custom products and solutions</a></li>
+                                <li><a href="#">Supervised training programs</a></li>
+                                <li><a href="#">Implementation and ongoing support</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <!-- Our Team starts -->
+                <div class="block-heading-six">
+                    <h4 class="bg-color">Our Team</h4>
+                </div>
+                <br>
+                <div>
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="team-member">
+                                <img class="img-responsive" src="{% static 'img/team1.jpg' %}" alt="">
+                                <h4>John Doe</h4>
+                                <span class="deg"><strong>Senior Doctor</strong></span> 
+                                <p>Specialist in skin disease diagnosis and treatment. Committed to patient care and medical excellence.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="team-member">
+                                <img class="img-responsive" src="{% static 'img/team2.jpg' %}" alt="">
+                                <h4>Jennifer Smith</h4>
+                                <span class="deg"><strong>Senior Surgeon</strong></span> 
+                                <p>Expert in surgical procedures, always delivering the highest quality care to patients.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="team-member">
+                                <img class="img-responsive" src="{% static 'img/team3.jpg' %}" alt="">
+                                <h4>Christian Lee</h4>
+                                <span class="deg"><strong>Medical Manager</strong></span> 
+                                <p>Leader in coordinating our clinical teams and ensuring smooth patient services.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="team-member">
+                                <img class="img-responsive" src="{% static 'img/team4.jpg' %}" alt="">
+                                <h4>Katherine Rose</h4>
+                                <span class="deg"><strong>Chairperson</strong></span> 
+                                <p>Visionary overseeing our hospital’s growth, standards, and community outreach.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Our team ends -->
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

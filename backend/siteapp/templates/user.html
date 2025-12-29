@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}User Profile{% endblock %}
+{% block content %}
+<div id="wrapper" class="container" style="margin-top: 20px;">
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="panel panel-default" style="border-radius:12px;">
+        <div class="panel-body" style="padding:12px;">
+          <h4 style="margin-top:0;">Profile</h4>
+          <ul class="list-unstyled" style="margin:0;">
+            <li class="tab-link active" data-target="#tab-overview" style="padding:8px 6px; background:#f5f7fa; border-radius:8px; margin-bottom:6px; cursor:pointer;"><i class="fa fa-user"></i> Overview</li>
+            <li class="tab-link" data-target="#tab-edit" style="padding:8px 6px; cursor:pointer;">Edit Profile</li>
+            <li class="tab-link" data-target="#tab-language" style="padding:8px 6px; cursor:pointer;">Language</li>
+            <li class="tab-link" data-target="#tab-notify" style="padding:8px 6px; cursor:pointer;">Notifications</li>
+          </ul>
+          <hr>
+          <a href="{% url 'logout' %}" class="btn btn-default btn-block">Logout</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-default" style="border-radius:12px;">
+        <div class="panel-heading" style="border-radius:12px 12px 0 0;"><h3 class="panel-title">Edit Profile</h3></div>
+        <div class="panel-body">
+          <div id="tab-overview" class="tab-pane">
+            <p><strong>Name:</strong> {{ user_obj.first_name }} {{ user_obj.last_name }}</p>
+            <p><strong>Email:</strong> {{ user_obj.email }}</p>
+            <p><strong>Location:</strong> {{ profile.location }}</p>
+            <p><strong>Bio:</strong> {{ profile.bio }}</p>
+          </div>
+
+          <div id="tab-edit" class="tab-pane" style="display:none;">
+          <div class="media" style="margin-bottom:16px;">
+            <div class="media-left">
+              <img id="avatarPreview" src="{% if profile.avatar %}{{ profile.avatar.url }}{% else %}{% static 'img/avatar.png' %}{% endif %}" class="media-object" style="width:64px;height:64px;border-radius:50%;object-fit:cover;" alt="avatar">
+            </div>
+            <div class="media-body" style="padding-left:12px;">
+              <label class="btn btn-default btn-sm" style="margin-bottom:6px;">
+                Upload new photo <input id="avatarInput" type="file" accept="image/*" style="display:none;">
+              </label>
+              <div style="color:#8a8f98;">At least 800×800 px recommended. JPG or PNG allowed.</div>
+            </div>
+          </div>
+
+          <div class="panel" style="border-radius:10px;">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-sm-4"><strong>Full Name</strong><div id="pi_name">{{ user_obj.first_name }} {{ user_obj.last_name }}</div></n></div>
+                <div class="col-sm-4"><strong>Email</strong><div id="pi_email">{{ user_obj.email }}</div></div>
+                <div class="col-sm-4"><strong>Username</strong><div id="pi_user">{{ user_obj.username }}</div></div>
+              </div>
+              <div class="text-right" style="margin-top:8px;">
+                <button class="btn btn-default btn-sm" data-toggle="collapse" data-target="#editPersonal">Edit</button>
+              </div>
+              <div id="editPersonal" class="collapse" style="margin-top:10px;">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <label>First name</label>
+                    <input id="fn" type="text" class="form-control" value="{{ user_obj.first_name }}">
+                  </div>
+                  <div class="col-sm-6">
+                    <label>Last name</label>
+                    <input id="ln" type="text" class="form-control" value="{{ user_obj.last_name }}">
+                  </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                  <div class="col-sm-6">
+                    <label>Email</label>
+                    <input id="em" type="email" class="form-control" value="{{ user_obj.email }}">
+                  </div>
+                  <div class="col-sm-6">
+                    <label>Location</label>
+                    <input id="loc" type="text" class="form-control" placeholder="City / State" value="{{ profile.location }}">
+                  </div>
+                </div>
+                <div class="text-right" style="margin-top:10px;">
+                  <button id="savePi" class="btn btn-primary btn-sm">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="border-radius:10px;">
+            <div class="panel-body">
+              <h4 style="margin-top:0;">Bio</h4>
+              <textarea id="bio" class="form-control" rows="4" placeholder="Write a short bio...">{{ profile.bio }}</textarea>
+              <div class="text-right" style="margin-top:10px;">
+                <button id="saveBio" class="btn btn-primary btn-sm">Save changes</button>
+              </div>
+            </div>
+          </div>
+          </div>
+
+          <div id="tab-language" class="tab-pane" style="display:none;">
+            <p>Language preferences coming soon.</p>
+          </div>
+          <div id="tab-notify" class="tab-pane" style="display:none;">
+            <p>Notification settings coming soon.</p>
+          </div>
+          <div id="tab-password" class="tab-pane" style="display:none;">
+            <div class="row">
+              <div class="col-sm-4">
+                <label>Current password</label>
+                <input id="curPwd" type="password" class="form-control" placeholder="Current password">
+              </div>
+              <div class="col-sm-4">
+                <label>New password</label>
+                <div class="input-group">
+                  <input id="newPwd" type="password" class="form-control" placeholder="New password">
+                  <span class="input-group-btn"><button id="toggleNewPwd" type="button" class="btn btn-default">Show</button></span>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <label>Confirm password</label>
+                <input id="confirmPwd" type="password" class="form-control" placeholder="Confirm password">
+              </div>
+            </div>
+            <div class="text-right" style="margin-top:10px;">
+              <button id="savePwd" type="button" class="btn btn-primary">Update Password</button>
+            </div>
+          </div>
+          <div id="tab-access" class="tab-pane" style="display:none;">
+            <p>Access logs coming soon.</p>
+          </div>
+          <div id="tab-sessions" class="tab-pane" style="display:none;">
+            <p>Active sessions coming soon.</p>
+          </div>
+
+          <a href="{% url 'image_upload' %}" class="btn btn-default">Go to Image Upload</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="panel panel-default" style="border-radius:12px;">
+        <div class="panel-body">
+          <h4 style="margin-top:0;">Complete your profile</h4>
+          <div style="display:flex;align-items:center;justify-content:center;margin:10px 0;">
+            <svg width="120" height="120" viewBox="0 0 36 36">
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee" stroke-width="3" />
+              <path id="progressArc" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 0" fill="none" stroke="#0ACCCE" stroke-width="3" />
+              <text x="18" y="20.35" font-size="8" text-anchor="middle" fill="#333" id="progressText">40%</text>
+            </svg>
+          </div>
+          <ul class="list-unstyled" id="progressList" style="margin-bottom:0;">
+            <li>Setup account ✓</li>
+            <li>Upload photo ✓</li>
+            <li>Personal Info ✓</li>
+            <li>Location</li>
+            <li>Biography</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+(function(){
+  var csrfToken = (function(){
+    var m = document.cookie.match(/csrftoken=([^;]+)/); return m?m[1]:'';
+  })();
+  function postJSON(url, data){
+    return fetch(url, {method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':csrfToken}, body: JSON.stringify(data)}).then(r=>r.json());
+  }
+  var input = document.getElementById('avatarInput');
+  var img = document.getElementById('avatarPreview');
+  if(input){
+    input.addEventListener('change', function(e){
+      var f = e.target.files && e.target.files[0];
+      if(!f) return;
+      var url = URL.createObjectURL(f);
+      img.src = url;
+      var fd = new FormData();
+      fd.append('avatar', f);
+      fetch('{% url "user" %}', {method:'POST', headers:{'X-CSRFToken':csrfToken}, body: fd}).then(()=>{});
+    });
+  }
+  function setProgress(pct){
+    var arc = document.getElementById('progressArc');
+    var text = document.getElementById('progressText');
+    var end = pct/100*360; var r = 15.9155;
+    var x = 18 + r * Math.sin(end*Math.PI/180);
+    var y = 18 - r * Math.cos(end*Math.PI/180);
+    var laf = end>180?1:0;
+    arc.setAttribute('d', 'M18 2.0845 A '+r+' '+r+' 0 '+laf+' 1 '+x+' '+y);
+    text.textContent = pct+'%';
+  }
+  setProgress(40);
+  // Tabs activation
+  function activateTab(id){
+    document.querySelectorAll('.tab-pane').forEach(function(p){ p.style.display = 'none'; });
+    document.querySelectorAll('.tab-link').forEach(function(li){ li.className = li.className.replace(' active',''); });
+    var el = document.querySelector(id); if(el) el.style.display = '';
+    var link = document.querySelector('.tab-link[data-target="'+id+'"]'); if(link) link.className += ' active';
+  }
+  document.querySelectorAll('.tab-link').forEach(function(li){
+    li.addEventListener('click', function(){ activateTab(li.getAttribute('data-target')); });
+  });
+  activateTab('#tab-overview');
+  document.getElementById('savePi').addEventListener('click', function(){
+    postJSON('{% url "user" %}', {
+      first_name: document.getElementById('fn').value,
+      last_name: document.getElementById('ln').value,
+      email: document.getElementById('em').value,
+      location: document.getElementById('loc').value
+    }).then(function(){ setProgress(60); });
+  });
+  document.getElementById('saveBio').addEventListener('click', function(){
+    var fd = new FormData();
+    fd.append('bio', document.getElementById('bio').value);
+    fd.append('location', document.getElementById('loc').value);
+    fetch('{% url "user" %}', {method:'POST', headers:{'X-CSRFToken':csrfToken}, body: fd})
+      .then(function(){ setProgress(80); });
+  });
+  // Password tab toggle button
+  (function(){
+    var i = document.getElementById('newPwd'); var b = document.getElementById('toggleNewPwd');
+    if(b) b.addEventListener('click', function(){ var t = i.type==='password'?'text':'password'; i.type=t; b.textContent = t==='password'?'Show':'Hide'; });
+  })();
+  // Save password
+  document.getElementById('savePwd').addEventListener('click', function(){
+    var payload = {
+      current_password: document.getElementById('curPwd').value,
+      new_password: document.getElementById('newPwd').value,
+      confirm_password: document.getElementById('confirmPwd').value
+    };
+    fetch('{% url "change_password" %}', {method:'POST', headers:{'Content-Type':'application/json','X-CSRFToken':csrfToken}, body: JSON.stringify(payload)})
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        alert(res.ok ? 'Password updated successfully' : (res.error||'Failed to update'));
+      }).catch(function(){ alert('Failed to update'); });
+  });
+})();
+</script>
+{% endblock %}

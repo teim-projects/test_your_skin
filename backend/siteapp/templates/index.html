@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<!-- ================= BANNER SECTION ================= -->
+<section id="banner">
+    <div id="main-slider" class="flexslider">
+        <ul class="slides">
+            <li>
+                <img src="{% static 'img/slides/AI-in-Dermatology.jpg' %}" alt="AI in Dermatology" />
+            </li>
+            <li>
+                <img src="{% static 'img/slides/ai.webp' %}" alt="AI application in skin diagnostics" />
+            </li>
+            <li>
+                <img src="{% static 'img/slides/Comprehensive_skin_a.jpg' %}" alt="Comprehensive skin analysis" />
+            </li>
+            <li>
+                <img src="{% static 'img/slides/image 1.jpg' %}" alt="Clinical skin evaluation" />
+            </li>
+            <li>
+                <img src="{% static 'img/slides/image 2.jpg' %}" alt="Dermatology imaging 2" />
+            </li>
+            <li>
+                <img src="{% static 'img/slides/image 3.webp' %}" alt="Dermatology imaging 3" />
+            </li>
+            <li>
+                <img src="{% static 'img/slides/image 4.jpg' %}" alt="Dermatology imaging 4" />
+            </li>
+            <li>
+                <img src="{% static 'img/slides/img7.jpg' %}" alt="Dermatology imaging 5" />
+            </li>
+        </ul>
+    </div>
+</section>
+
+<!-- ================= INTRO / TEXT AREA ================= -->
+<section class="txt-area section-pad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div class="aligncenter responsive-form">
+                    <span class="pill">AI skin awareness</span>
+                    <h1 class="aligncenter">Spot Skin Concerns Early, Act with Confidence</h1>
+                    <p>
+                        Our AI-assisted platform screens uploaded skin images, highlights patterns linked to
+                        acne, eczema, psoriasis, fungal infections, and more, and provides practical guidance
+                        within seconds. Use it as your first checkpoint before visiting a dermatologist.
+                    </p>
+                    <p>
+                        <strong>Important:</strong> This is a primary diagnosis helper—not a cure or a replacement for
+                        medical consultation. Always connect with a certified dermatologist to confirm findings
+                        and receive treatment.
+                    </p>
+                    <a href="{% url 'image_upload' %}" class="btn btn-primary" style="margin-top:8px;">Upload &amp; Scan Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= SKIN DISEASE BANNERS ================= -->
+<section class="skin-banners section-pad" id="skin-disease-banners">
+    <div class="container">
+        <div class="section-heading">
+            <span>Skin disease snapshots</span>
+            <h2>Recognize the Most Common Problems</h2>
+            <p>Visual cues help you relate to your current concern. Tap into our library of real-world examples.</p>
+        </div>
+        <div class="grid-4">
+            <article class="skin-banner-card acne">
+                <div>
+                    <span>Acne &amp; Breakouts</span>
+                    <p>Clogged pores, papules, recurring inflammation</p>
+                </div>
+            </article>
+            <article class="skin-banner-card eczema">
+                <div>
+                    <span>Eczema &amp; Dermatitis</span>
+                    <p>Dry, itchy rashes and compromised barrier</p>
+                </div>
+            </article>
+            <article class="skin-banner-card psoriasis">
+                <div>
+                    <span>Psoriasis Plaques</span>
+                    <p>Thick, scaly patches with autoimmune origin</p>
+                </div>
+            </article>
+            <article class="skin-banner-card melanoma">
+                <div>
+                    <span>Melanoma Watch</span>
+                    <p>Changing moles that demand urgent review</p>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- ================= TYPES OVERVIEW ================= -->
+<section id="skin-types" class="disease-glance section-pad">
+    <div class="container">
+        <div class="section-heading">
+            <span>Types of skin diseases</span>
+            <p>Here is a concise summary of major categories our tool highlights, along with hallmark signs.</p>
+        </div>
+
+        <div class="grid-3">
+            <div class="card-soft">
+                <h3>Inflammatory</h3>
+                <p>Acne, eczema, rosacea</p>
+                <ul>
+                    <li>Redness, pustules, or bumps that flare with triggers</li>
+                    <li>Often linked to hormones, barrier damage, or immune response</li>
+                </ul>
+            </div>
+            <div class="card-soft">
+                <h3>Autoimmune &amp; Chronic</h3>
+                <p>Psoriasis, vitiligo, lupus</p>
+                <ul>
+                    <li>Persistent patches or plaques that spread over time</li>
+                    <li>Needs lifestyle tracking plus medical intervention</li>
+                </ul>
+            </div>
+            <div class="card-soft">
+                <h3>Infectious</h3>
+                <p>Fungal, bacterial, viral</p>
+                <ul>
+                    <li>Ring-shaped rashes, crusting sores, or sudden blisters</li>
+                    <li>Early identification limits transmission and scarring</li>
+                </ul>
+            </div>
+            <div class="card-soft">
+                <h3>Pigment &amp; Sun Damage</h3>
+                <p>Melasma, actinic keratosis</p>
+                <ul>
+                    <li>Color changes on high-exposure zones</li>
+                    <li>Sun protection and routine exams are critical</li>
+                </ul>
+            </div>
+            <div class="card-soft">
+                <h3>Pre-cancerous &amp; Malignant</h3>
+                <p>BCC, SCC, Melanoma</p>
+                <ul>
+                    <li>Non-healing sores or fast-growing lesions</li>
+                    <li>Requires urgent dermatology evaluation</li>
+                </ul>
+            </div>
+            <div class="card-soft">
+                <h3>Allergy Driven</h3>
+                <p>Contact dermatitis, urticaria</p>
+                <ul>
+                    <li>Pattern mirrors the surface you touched</li>
+                    <li>Patch testing and avoidance calm flare-ups</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= OUR SOLUTION ================= -->
+<section id="our-solution" class="solution-highlight section-pad">
+    <div class="container">
+        <div class="section-heading">
+            <span>Brief about our solution</span>
+            <p>TEIM’s AI model reviews images, flags warning signs, and reminds you that human expertise is the final checkpoint.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card-soft">
+                    <h3>Challenges We Address</h3>
+                    <ul class="stacked-list">
+                        <li>Delayed doctor visits due to uncertainty or distance</li>
+                        <li>Lack of awareness about early warning signs</li>
+                        <li>Need for a guided next step after noticing a change</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-soft">
+                    <h3>What You Get</h3>
+                    <ul class="stacked-list">
+                        <li>Clear language explaining the probable skin issue</li>
+                        <li>Risk labels that nudge you to seek timely advice</li>
+                        <li>Reminders to consult a dermatologist for confirmation</li>
+                    </ul>
+                    <div style="margin-top:16px;">
+                        <a href="{% url 'image_upload' %}" class="btn btn-primary">Experience the Tool</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= IMPORTANCE OF REGULAR DIAGNOSIS ================= -->
+<section id="diagnosis-importance" class="diagnosis-importance section-pad">
+    <div class="container">
+        <div class="section-heading">
+            <span>Importance of regular diagnosis</span>
+            <h2>Why Consistent Skin Checks Matter</h2>
+            <p>Fast response today prevents invasive procedures tomorrow. Stay a step ahead.</p>
+        </div>
+        <div class="grid-3">
+            <div class="card-soft">
+                <h4>Early detection</h4>
+                <p>Identifying lesions when they are subtle helps you preserve healthy tissue and confidence.</p>
+            </div>
+            <div class="card-soft">
+                <h4>Prevent escalation</h4>
+                <p>Routine scans capture changes before they evolve into painful, chronic, or cancerous stages.</p>
+            </div>
+            <div class="card-soft">
+                <h4>Stay proactive</h4>
+                <p>Schedule monthly uploads and keep a visual diary that you can share with your dermatologist.</p>
+            </div>
+        </div>
+        <div class="row" style="margin-top:30px;">
+            <div class="col-md-8 col-md-offset-2">
+                <ul class="stacked-list">
+                    <li>Compare today's scan with prior results to measure improvements.</li>
+                    <li>Use reminders to prompt seasonal or post-travel checks.</li>
+                    <li>Escalate to medical care immediately when the tool labels “urgent”.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="cta-diagnosis" id="free-diagnosis-cta">
+    <div class="container">
+        <div class="cta-wrapper">
+            <h3>Try Our Free Skin Diagnosis Tool</h3>
+            <p>Upload a clear photo, receive a structured report, and carry it to your dermatologist visit.</p>
+            <a href="{% url 'image_upload' %}" class="btn btn-success">Launch Free Diagnosis</a>
+            <div style="margin-top:12px;">
+                <a href="{% url 'contact' %}" class="btn btn-ghost">Talk to Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= ABOUT US ================= -->
+<section class="aboutUs">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="aligncenter">
+                    We are committed to making skin health accessible through advanced, technology-driven screening tools. 
+                    Our mission is to empower individuals with early insights, helping them take informed steps toward healthier skin.
+                </div>
+                <br/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{% static 'img/clinic.png' %}" alt="About Hospital" class="about-image">
+                <div class="space"></div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card-soft">
+                    <p>Our platform focuses on providing timely guidance while ensuring comfort, trust, and confidentiality.</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-arrow-circle-right pr-10 colored"></i> Experienced dermatological insights</li>
+                        <li><i class="fa fa-arrow-circle-right pr-10 colored"></i> Smart AI tools for early screening</li>
+                        <li><i class="fa fa-arrow-circle-right pr-10 colored"></i> Simple, accurate, and fast analysis</li>
+                        <li><i class="fa fa-arrow-circle-right pr-10 colored"></i> Affordable and accessible for all</li>
+                        <li><i class="fa fa-arrow-circle-right pr-10 colored"></i> 24/7 availability for quick self-checks</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function(){
+
+    $("#openRegister").click(function(e){
+        e.preventDefault();
+        $("#loginModal").modal("hide");
+        $("#registerModal").modal("show");
+    });
+
+    $("#openLogin").click(function(e){
+        e.preventDefault();
+        $("#registerModal").modal("hide");
+        $("#loginModal").modal("show");
+    });
+
+    $("#loginForm").submit(function(e){
+        e.preventDefault();
+        alert("Login successful!");
+        $("#loginModal").modal("hide");
+    });
+
+    $("#registerForm").submit(function(e){
+        e.preventDefault();
+        alert("Registered successfully!");
+        $("#registerModal").modal("hide");
+        $("#loginModal").modal("show");
+    });
+
+});
+</script>
+{% endblock %}

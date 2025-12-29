@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login{% endblock %}
+{% block content %}
+
+    <section id="inner-headline">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="pageTitle">Login</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">Login to your account</h3></div>
+                        <div class="panel-body">
+                            <form id="loginForm" method="post" action="{% url 'login' %}" novalidate>
+                                {% csrf_token %}
+                                <div class="form-group has-feedback" id="usernameGroup">
+                                    <label for="username">Username or Email:</label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username or email" required aria-describedby="usernameHelp" value="{{ username_value|default:'' }}">
+                                    <small id="usernameHelp" class="form-text text-muted">Enter your username or a valid email address.</small>
+                                    <small id="usernameError" class="help-block text-danger validation-message"></small>
+                                </div>
+                                <div class="form-group has-feedback" id="passwordGroup">
+                                    <label for="password">Password:</label>
+                                    <div class="input-group password-toggle-group">
+                                      <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required aria-describedby="capsWarning">
+                                      <span class="input-group-addon password-toggle" id="toggleLoginPwd" role="button" tabindex="0" aria-label="Toggle password visibility"><i class="fa fa-eye"></i></span>
+                                    </div>
+                                    <small id="capsWarning" class="form-text text-warning" style="display:none;">Warning: Caps Lock is on.</small>
+                                    <small id="passwordError" class="help-block text-danger validation-message"></small>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                            </form>
+                            <div id="formError" class="alert alert-danger" role="alert" {% if not error %}style="display:none;"{% else %}style="margin-top:10px;"{% endif %}>{{ error }}</div>
+                            <hr>
+                            <p>New here? <a href="{% url 'register' %}">Register first</a> to access the system.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer (copy from your template) -->
+    <!-- ... copy the footer code from your original template ... -->
+{% endblock %}
+{% block extra_js %}
+<script>
+(function(){
+  var form = document.getElementById('loginForm');
+  if(!form) { return; }
+
+  var username = document.getElementById('username');
+  var password = document.getElementById('password');
+  var caps = document.getElementById('capsWarning');
+  var toggle = document.getElementById('toggleLoginPwd');
+  var usernameGroup = document.getElementById('usernameGroup');
+  var passwordGroup = document.getElementById('passwordGroup');
+  var usernameError = document.getElementById('usernameError');
+  var passwordError = document.getElementById('passwordError');
+  var formError = document.getElementById('formError');
+
+  var serverErrorMessage = "{{ error|default:''|escapejs }}";
+  if(formError){
+    if(serverErrorMessage){
+      formError.textContent = serverErrorMessage;
+      formError.style.display = 'block';
+      formError.dataset.server = 'true';
+    } else {
+      formError.style.display = 'none';
+    }
+  }
+
+  function setError(group, helper, message){
+    if(group){ group.classList.add('has-error'); }
+    if(helper){ helper.textContent = message; helper.style.display = 'block'; }
+  }
+
+  function clearError(group, helper){
+    if(group){ group.classList.remove('has-error'); }
+    if(helper){ helper.textContent = ''; helper.style.display = 'none'; }
+  }
+
+  function resetFieldErrors(){
+    clearError(usernameGroup, usernameError);
+    clearError(passwordGroup, passwordError);
+  }
+
+  function hideClientFormError(){
+    if(formError && formError.dataset.server !== 'true'){
+      formError.style.display = 'none';
+      formError.textContent = '';
+    }
+  }
+
+  function isValidEmail(value){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  function isValidUsername(value){
+    return /^[A-Za-z0-9._@-]{3,100}$/.test(value);
+  }
+
+  password.addEventListener('keyup', function(e){
+    var isCaps = e.getModifierState && e.getModifierState('CapsLock');
+    caps.style.display = isCaps ? 'inline' : 'none';
+  });
+
+  [username, password].forEach(function(field){
+    field.addEventListener('input', function(){
+      if(field === username){
+        clearError(usernameGroup, usernameError);
+      } else {
+        clearError(passwordGroup, passwordError);
+      }
+      if(formError){
+        delete formError.dataset.server;
+      }
+      hideClientFormError();
+    });
+  });
+
+  form.addEventListener('submit', function(e){
+    var hasError = false;
+    resetFieldErrors();
+    hideClientFormError();
+
+    var userValue = username.value.trim();
+    if(!userValue){
+      setError(usernameGroup, usernameError, 'Username or email is required.');
+      hasError = true;
+    } else if(!(isValidEmail(userValue) || isValidUsername(userValue))){
+      setError(usernameGroup, usernameError, 'Enter a valid username or email address.');
+      hasError = true;
+    }
+
+    if(!password.value){
+      setError(passwordGroup, passwordError, 'Password is required.');
+      hasError = true;
+    }
+
+    if(hasError){
+      e.preventDefault();
+      if(formError){
+        formError.textContent = 'Please fix the highlighted fields and try again.';
+        formError.style.display = 'block';
+        delete formError.dataset.server;
+      }
+      return;
+    }
+
+    if(formError){
+      formError.style.display = 'none';
+      formError.textContent = '';
+      delete formError.dataset.server;
+    }
+  });
+
+  function toggleVisibility(){
+    var nextType = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', nextType);
+    if(toggle){
+      toggle.setAttribute('aria-pressed', nextType === 'text');
+      toggle.setAttribute('aria-label', nextType === 'text' ? 'Hide password' : 'Show password');
+      var icon = toggle.querySelector('i');
+      if(icon){
+        if(nextType === 'text'){
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        } else {
+          icon.classList.add('fa-eye');
+          icon.classList.remove('fa-eye-slash');
+        }
+      }
+    }
+  }
+
+  if(toggle){
+    toggle.addEventListener('click', function(){
+      toggleVisibility();
+    });
+    toggle.addEventListener('keydown', function(event){
+      if(event.key === 'Enter' || event.key === ' '){
+        event.preventDefault();
+        toggleVisibility();
+      }
+    });
+  }
+})();
+</script>
+{% endblock %}
