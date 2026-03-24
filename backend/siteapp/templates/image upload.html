@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Upload Image{% endblock %}
+{% block title %}Free Diagnosis.{% endblock %}
 {% block extra_head %}
   <style>
     body {
@@ -98,7 +98,10 @@
           <!-- Upload -->
           <div class="mb-3">
             <label for="imageInput" class="form-label">Upload Skin Image:</label>
-            <input type="file" id="imageInput" accept="image/*" class="form-control mb-2">
+<input type="file" id="imageInput" accept="image/*" class="form-control mb-2">
+            <small class="form-text text-muted">
+              Supported formats: JPG, PNG, WebP. Max size: 1MB. Use clear, well-lit images of affected skin area for best results.
+            </small>
           </div>
 
           <!-- Preview -->

@@ -3,8 +3,6 @@ Hybrid Skin Disease Classification System
 Combines Vision Transformer + DenseNet121 for image classification
 with multimodal learning from Excel symptom data
 
-Author: AI Assistant
-Date: December 2024
 """
 
 import os

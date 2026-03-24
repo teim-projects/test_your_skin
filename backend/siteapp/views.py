@@ -248,7 +248,7 @@ def send_email_otp(request: HttpRequest) -> JsonResponse:
         'sent_at': now,
         'expires_at': expires_at,
     }
-    subject = 'Verify your email address'
+    subject = 'TEIM SkinCare - Email Verification (OTP)'
     message = (
         f'Your verification code is {otp_code}.\n\n'
         'It expires in 10 minutes. If you did not initiate this request, you can ignore this message.'
